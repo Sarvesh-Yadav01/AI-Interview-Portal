@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "AI-powered company interview portal with proctored rounds, coding assessment, admin analytics, and AI feedback.",
   "main": "app.js",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
