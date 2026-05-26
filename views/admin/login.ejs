@@ -1,0 +1,18 @@
+<%- include("../partials/header") %>
+
+<section class="auth-shell">
+  <div class="auth-card">
+    <p class="eyebrow">Admin Access</p>
+    <h1 class="h3 mb-3">Admin Sign In</h1>
+    <% if (error) { %>
+      <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    <form action="/admin/login" method="POST" class="vstack gap-3">
+      <input class="form-control" type="email" name="email" placeholder="Admin email" required>
+      <input class="form-control" type="password" name="password" placeholder="Admin password" required>
+      <button class="btn btn-accent w-100" type="submit">Sign In</button>
+    </form>
+  </div>
+</section>
+
+<%- include("../partials/footer") %>

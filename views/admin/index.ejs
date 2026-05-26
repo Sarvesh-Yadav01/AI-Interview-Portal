@@ -1,0 +1,80 @@
+<%- include("../partials/header") %>
+
+<section class="container-fluid dashboard-wrap">
+  <div class="row">
+    <aside class="col-lg-2 sidebar">
+      <a href="/admin" class="active">Admin Dashboard</a>
+      <a href="/interview">Interview Modules</a>
+      <form action="/admin/logout" method="POST">
+        <button class="sidebar-button" type="submit">Admin Logout</button>
+      </form>
+    </aside>
+    <div class="col-lg-10 p-4">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+          <p class="eyebrow mb-1">Admin Dashboard</p>
+          <h1 class="h2 mb-0">Hiring Platform Control Room</h1>
+        </div>
+        <span class="round-meta">Full report access</span>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-3"><div class="stat-card"><span>Total Users</span><strong><%= stats.totalUsers %></strong></div></div>
+        <div class="col-md-3"><div class="stat-card"><span>Completed</span><strong><%= stats.completed %></strong></div></div>
+        <div class="col-md-3"><div class="stat-card"><span>Terminated</span><strong><%= stats.terminated %></strong></div></div>
+        <div class="col-md-3"><div class="stat-card"><span>Average Score</span><strong><%= stats.averageScore %>%</strong></div></div>
+      </div>
+
+      <div class="content-panel mb-4">
+        <h2 class="h5 mb-3">Round Usage</h2>
+        <div class="admin-chip-row">
+          <% Object.keys(roundCounts).forEach((key) => { %>
+            <span><%= key %>: <strong><%= roundCounts[key] %></strong></span>
+          <% }) %>
+          <% if (Object.keys(roundCounts).length === 0) { %>
+            <span>No attempts yet</span>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="content-panel">
+        <h2 class="h5 mb-3">Recent Interview Attempts</h2>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr><th>Candidate</th><th>Email</th><th>Round</th><th>Role</th><th>Score</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <% results.forEach((item) => { %>
+                <tr>
+                  <td><%= item.user ? item.user.name : "Deleted user" %></td>
+                  <td><%= item.user ? item.user.email : "-" %></td>
+                  <td><%= item.category %></td>
+                  <td><%= item.role %></td>
+                  <td><span class="score-pill"><%= item.score %>%</span></td>
+                  <td><%= item.status %></td>
+                  <td>
+                    <div class="d-flex flex-wrap gap-2">
+                      <a class="btn btn-sm btn-outline-dark" href="/admin/result/<%= item._id %>">Report</a>
+                      <form action="/admin/result/<%= item._id %>/mail" method="POST">
+                        <button class="btn btn-sm btn-outline-dark" type="submit">Mail</button>
+                      </form>
+                      <form action="/admin/result/<%= item._id %>/delete" method="POST" onsubmit="return confirm('Delete this report card?')">
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+              <% if (results.length === 0) { %>
+                <tr><td colspan="7" class="text-muted">No interview attempts yet.</td></tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,72 @@
+<%- include("../partials/header") %>
+
+<section class="container-fluid dashboard-wrap">
+  <div class="row">
+    <aside class="col-lg-2 sidebar">
+      <a href="/dashboard" class="active">Overview</a>
+      <a href="/interview">New Interview</a>
+    </aside>
+    <div class="col-lg-10 p-4">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+          <p class="eyebrow mb-1">Dashboard</p>
+          <h1 class="h2 mb-0">Hi, <%= currentUser.name %></h1>
+        </div>
+        <a href="/interview" class="btn btn-accent">Start Interview</a>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-4"><div class="stat-card"><span>Total Interviews</span><strong><%= stats.totalInterviews %></strong></div></div>
+        <div class="col-md-4"><div class="stat-card"><span>Average Score</span><strong><%= stats.averageScore %>%</strong></div></div>
+        <div class="col-md-4"><div class="stat-card"><span>Best Score</span><strong><%= stats.bestScore %>%</strong></div></div>
+      </div>
+
+      <div class="content-panel mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div>
+            <h2 class="h5 mb-1">Industry Modules</h2>
+            <p class="text-muted mb-0">Voice interview, webcam monitoring, and admin analytics are enabled.</p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-dark" href="/interview">Interview Suite</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-panel mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h5 mb-0">Performance Graph</h2>
+          <span class="text-muted small">Recent attempts</span>
+        </div>
+        <canvas id="scoreChart" height="110" data-labels='<%- JSON.stringify(chartLabels) %>' data-scores='<%- JSON.stringify(chartScores) %>'></canvas>
+      </div>
+
+      <div class="content-panel">
+        <h2 class="h5 mb-3">Interview History</h2>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr><th>Category</th><th>Role</th><th>Score</th><th>Date</th><th>Report</th></tr>
+            </thead>
+            <tbody>
+              <% if (results.length === 0) { %>
+                <tr><td colspan="5" class="text-muted">No interviews yet. Start your first one.</td></tr>
+              <% } %>
+              <% results.forEach((item) => { %>
+                <tr>
+                  <td><%= item.category %></td>
+                  <td><%= item.role || "General Candidate" %></td>
+                  <td><span class="score-pill"><%= item.score %>%</span></td>
+                  <td><%= item.createdAt.toLocaleDateString() %></td>
+                  <td><a href="/interview/result/<%= item._id %>">View</a></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("../partials/footer") %>

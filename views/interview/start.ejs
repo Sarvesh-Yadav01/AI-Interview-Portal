@@ -1,0 +1,67 @@
+<%- include("../partials/header") %>
+
+<section class="container py-4 interview-shell">
+  <div class="interview-sticky-top mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+    <div>
+      <p class="eyebrow mb-1"><%= category %></p>
+      <h1 class="h2 mb-0"><%= round.title %></h1>
+      <p class="text-muted mb-0"><%= role %> - Strict proctored mode</p>
+      <div class="interview-badges mt-2">
+        <span>Webcam Monitoring</span>
+        <% if (voiceEnabled) { %><span>Voice Interview</span><% } %>
+      </div>
+    </div>
+    <div class="timer-box">Time: <span id="timer" data-minutes="<%= durationMinutes %>"><%= String(durationMinutes).padStart(2, "0") %>:00</span></div>
+    </div>
+
+    <div class="security-panel" id="securityPanel">
+    <div>
+      <strong>Security required</strong>
+      <p class="mb-0">Camera and full screen sharing must stay active. Switching tabs/windows, stopping screen share, or repeated suspicious camera state will end the exam.</p>
+    </div>
+    <div class="proctor-actions">
+      <video id="cameraPreview" autoplay muted playsinline></video>
+      <button class="btn btn-outline-dark" type="button" id="enableProctoring">Enable Camera + Screen</button>
+    </div>
+    </div>
+  </div>
+
+  <form action="/interview/submit" method="POST" class="vstack gap-3" id="interviewForm">
+    <input type="hidden" name="securityEvents" id="securityEvents">
+    <input type="hidden" name="voiceTranscript" id="voiceTranscript">
+    <input type="hidden" name="webcamEnabled" id="webcamEnabled" value="false">
+    <input type="hidden" name="screenShareEnabled" id="screenShareEnabled" value="false">
+    <% questions.forEach((question, index) => { %>
+      <div class="question-panel">
+        <div class="d-flex flex-wrap justify-content-between gap-2 mb-2">
+          <label class="form-label fw-semibold mb-0"><%= index + 1 %>. <%= question.question %></label>
+          <span class="question-type"><%= question.type %> - <%= question.difficulty %></span>
+        </div>
+        <% if (question.type === "mcq") { %>
+          <div class="vstack gap-2">
+            <% question.options.forEach((option, optionIndex) => { %>
+              <label class="option-row">
+                <input class="form-check-input" type="radio" name="answer_<%= index %>" value="<%= option %>">
+                <span><%= optionIndex + 1 %>. <%= option %></span>
+              </label>
+            <% }) %>
+          </div>
+        <% } else if (question.type === "coding") { %>
+          <textarea class="form-control code-answer" name="answer_<%= index %>" rows="10" placeholder="Write approach and code here"></textarea>
+        <% } else { %>
+          <% if (voiceEnabled) { %>
+            <div class="voice-toolbar mb-2">
+              <button class="btn btn-outline-dark btn-sm voice-record" type="button" data-target="answer_<%= index %>">Start Voice Answer</button>
+              <span class="voice-state small text-muted">Speech capture ready</span>
+            </div>
+          <% } %>
+          <textarea class="form-control" name="answer_<%= index %>" rows="5" placeholder="Write your answer here"></textarea>
+        <% } %>
+      </div>
+    <% }) %>
+    <button class="btn btn-accent btn-lg align-self-start" type="submit" id="submitInterview">Submit Round</button>
+  </form>
+</section>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,62 @@
+<%- include("../partials/header") %>
+
+<section class="container py-5">
+  <div class="mb-4">
+    <p class="eyebrow">Interview System</p>
+    <h1 class="h2">Placement Interview Rounds</h1>
+    <p class="text-muted mb-0">Rounds unlock sequentially. Aptitude and Technical require 60% to continue.</p>
+  </div>
+
+  <div class="round-track mb-4">
+    <div class="round-step active">1. Aptitude & Reasoning</div>
+    <div class="round-step <%= progress.technical ? "active" : "" %>">2. Technical Round</div>
+    <div class="round-step <%= progress.voice ? "active" : "" %>">3. Voice Interview</div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-4">
+      <form action="/interview/start" method="POST" class="category-card">
+        <input type="hidden" name="round" value="aptitude">
+        <h2>Aptitude & Reasoning</h2>
+        <p>10 random industry MCQs: 1-4 easy, 5-8 moderate, 9-10 hard. Passing score is 60%.</p>
+        <div class="round-meta">10 minutes - MCQ - Optional answers</div>
+        <button class="btn btn-accent mt-3" type="submit">Start Aptitude Round</button>
+      </form>
+    </div>
+
+    <div class="col-lg-4">
+      <form action="/interview/start" method="POST" class="category-card <%= progress.technical ? "" : "locked-card" %>">
+        <input type="hidden" name="round" value="technical">
+        <h2>Technical Round</h2>
+        <p>Select a subcategory, then answer 7 MCQs and 3 written industry questions. Passing score is 60%.</p>
+        <select class="form-select" name="subcategory" aria-label="Select technical subcategory" <%= progress.technical ? "" : "disabled" %>>
+          <% technicalCategories.forEach((category) => { %>
+            <optgroup label="<%= category.name %>">
+              <% category.subcategories.forEach((item) => { %>
+                <option value="<%= item %>" <%= item === "MERN Stack Developer" ? "selected" : "" %>><%= item %></option>
+              <% }) %>
+            </optgroup>
+          <% }) %>
+        </select>
+        <div class="round-meta mt-3">10 minutes - 7 MCQ + 3 Written</div>
+        <button class="btn btn-accent mt-3" type="submit" <%= progress.technical ? "" : "disabled" %>>
+          <%= progress.technical ? "Start Technical Round" : "Score 60% in Aptitude First" %>
+        </button>
+      </form>
+    </div>
+
+    <div class="col-lg-4">
+      <form action="/interview/start" method="POST" class="category-card feature-round <%= progress.voice ? "" : "locked-card" %>">
+        <input type="hidden" name="round" value="voice">
+        <h2>Voice Interview</h2>
+        <p>Spoken interview mode with browser speech-to-text, transcript capture, and communication scoring.</p>
+        <div class="round-meta">6 minutes - Voice - Communication</div>
+        <button class="btn btn-accent mt-3" type="submit" <%= progress.voice ? "" : "disabled" %>>
+          <%= progress.voice ? "Start Voice Interview" : "Score 60% in Technical First" %>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include("../partials/footer") %>
