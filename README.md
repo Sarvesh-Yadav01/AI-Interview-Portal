@@ -18,7 +18,6 @@ AI-powered interview portal for candidate screening, resume analysis, proctored 
 - Node.js, Express.js, EJS
 - MongoDB and Mongoose
 - JWT cookies and Express sessions
-- Multer resume uploads
 - OpenAI integration
 - Nodemailer SMTP emails
 
@@ -50,11 +49,3 @@ SMTP_FROM=AI Interview Portal <your_email@example.com>
 
 Open `http://localhost:3000`.
 
-## Production
-
-```bash
-npm install --omit=dev
-npm start
-```
-
-Keep `.env` private. Use long random values for `JWT_SECRET` and `SESSION_SECRET`, and rotate any key, database password, SMTP password, or admin password that was shared publicly.
